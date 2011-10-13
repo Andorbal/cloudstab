@@ -4,8 +4,8 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("cloudstab.core")]
-[assembly: AssemblyDescription("Abstraction layer for cloud storage")]
+[assembly: AssemblyTitle("cloudstab.aws")]
+[assembly: AssemblyDescription("AWS implementation of the cloudstab interfaces")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CloudStAb")]
