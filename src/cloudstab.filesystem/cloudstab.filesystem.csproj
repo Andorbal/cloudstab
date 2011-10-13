@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{85714794-A3D8-46CF-9C1D-5072D493BFC6}</ProjectGuid>
+    <ProjectGuid>{BB5ED4D0-8D65-4430-B8C6-951D6383D44D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>cloudstab.core</RootNamespace>
-    <AssemblyName>cloudstab.core</AssemblyName>
+    <RootNamespace>cloudstab.filesystem</RootNamespace>
+    <AssemblyName>cloudstab.filesystem</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,9 +33,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="IBlobContainer.cs" />
-    <Compile Include="IBlobContainerManager.cs" />
-    <Compile Include="IBlobObject.cs" />
+    <Compile Include="FileSystemContainerManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\cloudstab.core\cloudstab.core.csproj">
+      <Project>{85714794-A3D8-46CF-9C1D-5072D493BFC6}</Project>
+      <Name>cloudstab.core</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

@@ -23,10 +23,14 @@
 	THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
+using System.Collections.Generic;
 
 namespace cloudstab.core {
 	public interface IBlobContainer {
-
+    IEnumerable<IBlobObject> ListObjects();
+    void AddObject(object key, object blob);
+    void DeleteObject(object key);
+    IBlobObject GetObject(object key);
 	}
 }
 
