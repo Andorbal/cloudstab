@@ -28,7 +28,10 @@ using cloudstab.core;
 
 namespace cloudstab.filesystem {
   public class FileSystemContainerManager : IBlobContainerManager {
-    public FileSystemContainerManager () {
+    private string _root;
+
+    public FileSystemContainerManager (string rootPath) {
+      _root = rootPath;
     }
 
     public IEnumerable<IBlobContainer> List () {

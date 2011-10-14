@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
@@ -7,7 +6,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("cloudstab.filesystem")]
 [assembly: AssemblyDescription("File system implementation of the cloudstab interfaces")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Andrew Benz")]
 [assembly: AssemblyProduct("CloudStAb")]
 [assembly: AssemblyCopyright("2011 Andrew Benz")]
 [assembly: AssemblyTrademark("")]

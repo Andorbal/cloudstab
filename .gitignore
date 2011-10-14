@@ -4,3 +4,5 @@ obj
 *.suo
 *.userprefs
 *.pidb
+_ReSharper*
+packages
