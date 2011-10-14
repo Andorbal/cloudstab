@@ -50,14 +50,22 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="SystemWrapper">
+      <HintPath>..\..\packages\SystemWrapper.0.4\lib\SystemWrapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystemContainerManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\cloudstab.core\cloudstab.core.csproj">
+      <Project>{85714794-A3D8-46CF-9C1D-5072D493BFC6}</Project>
+      <Name>cloudstab.core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\cloudstab.filesystem\cloudstab.filesystem.csproj">
       <Project>{BB5ED4D0-8D65-4430-B8C6-951D6383D44D}</Project>
       <Name>cloudstab.filesystem</Name>

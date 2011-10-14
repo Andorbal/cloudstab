@@ -24,27 +24,47 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using SystemWrapper.IO;
 using cloudstab.core;
 
 namespace cloudstab.filesystem {
   public class FileSystemContainerManager : IBlobContainerManager {
-    private string _root;
+    private readonly string _rootPath;
+    
+    public FileSystemContainerManager(string rootPath) : this(rootPath, new DirectoryWrap()) { }
 
-    public FileSystemContainerManager (string rootPath) {
-      _root = rootPath;
+    public FileSystemContainerManager(string rootPath, IDirectoryWrap directory) {
+      _rootPath = rootPath;
+      _directoryWrapper = directory;
+
+      if (!_directoryWrapper.Exists(rootPath)) {
+        _directoryWrapper.CreateDirectory(rootPath);  
+      }
     }
 
-    public IEnumerable<IBlobContainer> List () {
+    private readonly IDirectoryWrap _directoryWrapper;
+
+    #region "IBlobContainerManager Implementation"
+    public IEnumerable<IBlobContainer> List() {
+      return _directoryWrapper.GetDirectories(_rootPath)
+        .OfType<string>()
+        .Select(x => new FileSystemContainer(x));
+    }
+
+    public IBlobContainer Create(string name) {
+      _directoryWrapper.CreateDirectory(name);
+      return new FileSystemContainer(name);
+    }
+
+    public IBlobContainer Get(string name) {
       throw new NotImplementedException();
     }
 
-    public IBlobContainer Create (string name) {
+    public void Delete(string name) {
       throw new NotImplementedException();
     }
-
-    public void Delete (string name) {
-      throw new NotImplementedException();
-    }
+    #endregion
   }
 }
 

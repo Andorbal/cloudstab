@@ -28,6 +28,7 @@ using System.Collections.Generic;
 namespace cloudstab.core {
   public interface IBlobContainerManager {
     IEnumerable<IBlobContainer> List();
+    IBlobContainer Get(string name);
     IBlobContainer Create(string name);
     void Delete(string name);
   }
