@@ -32,7 +32,7 @@ using Rhino.Mocks;
 
 namespace cloudstab.filesystem.tests {
   [TestFixture]
-  class FileSystemContainerManagerTests {
+  public class FileSystemContainerManagerTests {
     [TestCase("foo"), TestCase("bar")]
     public void Constructor_WithValidPath_ChecksRootPathExists(string rootPath) {
       // Arrange

@@ -6,3 +6,5 @@ obj
 *.pidb
 _ReSharper*
 packages
+test-results
+*.swp
