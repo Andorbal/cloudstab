@@ -32,7 +32,7 @@ using cloudstab.core;
 namespace cloudstab.filesystem {
   public class FileSystemContainer : IBlobContainer {
     private readonly string _directoryPath;
-    
+
     public FileSystemContainer(string directoryPath) {
       _directoryPath = directoryPath;
     }
@@ -55,6 +55,8 @@ namespace cloudstab.filesystem {
     public IBlobObject GetObject(object key) {
       throw new NotImplementedException();
     }
+
+    public string Name { get { return _directoryPath; }}
     #endregion
   }
 }

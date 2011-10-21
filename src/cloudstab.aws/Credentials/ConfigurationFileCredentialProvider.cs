@@ -26,7 +26,7 @@ using System.Configuration;
 using Amazon.Runtime;
 
 namespace cloudstab.aws.Credentials {
-  class ConfigurationFileCredentialProvider : IAWSCredentialProvider {
+  public class ConfigurationFileCredentialProvider : IAWSCredentialProvider {
     public AWSCredentials GetCredentials() {
       return new BasicAWSCredentials(ConfigurationManager.AppSettings["AWSAccessKey"], ConfigurationManager.AppSettings["AWSSecretKey"]);
     }

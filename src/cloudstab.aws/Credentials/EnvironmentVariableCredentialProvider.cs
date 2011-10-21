@@ -26,7 +26,7 @@ using System;
 using Amazon.Runtime;
 
 namespace cloudstab.aws.Credentials {
-  class EnvironmentVariableCredentialProvider : IAWSCredentialProvider {
+  public class EnvironmentVariableCredentialProvider : IAWSCredentialProvider {
     public AWSCredentials GetCredentials() {
       return new BasicAWSCredentials(Environment.GetEnvironmentVariable("AWSAccessKey"), Environment.GetEnvironmentVariable("AWSSecretKey"));
     }

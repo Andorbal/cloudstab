@@ -54,8 +54,8 @@ namespace cloudstab.filesystem {
 
     public IBlobContainer Create(string name) {
       EnsureNameIsValid(name);
-      
-      _directoryWrapper.CreateDirectory(name);
+
+      _directoryWrapper.CreateDirectory(GetContainerPath(name));
       return new FileSystemContainer(name);
     }
 
@@ -66,9 +66,16 @@ namespace cloudstab.filesystem {
     public void Delete(string name) {
       EnsureNameIsValid(name);
 
-      if (_directoryWrapper.Exists(Path.Combine(_rootPath, name))) {
-        _directoryWrapper.Delete(name, true);
+      var pathToDelete = GetContainerPath(name);
+
+      if (_directoryWrapper.Exists(pathToDelete)) {
+        _directoryWrapper.Delete(pathToDelete, true);
       }
+    }
+    #endregion
+
+    private string GetContainerPath(string name) {
+      return Path.Combine(_rootPath, name);
     }
 
     private static void EnsureNameIsValid(string name) {
@@ -76,7 +83,6 @@ namespace cloudstab.filesystem {
         throw new ArgumentException("Container name cannot be empty.", "name");
       }
     }
-    #endregion
   }
 }
 

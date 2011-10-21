@@ -55,5 +55,7 @@ namespace cloudstab.aws {
     public IBlobObject GetObject(object key) {
       throw new NotImplementedException();
     }
+
+    public string Name { get { return _bucket.BucketName; }}
   }
 }

@@ -34,7 +34,7 @@ using cloudstab.core;
 using cloudstab.core.Exceptions;
 
 namespace cloudstab.aws {
-  class AWSContainerManager : IBlobContainerManager {
+  public class AWSContainerManager : IBlobContainerManager {
     private AmazonS3 _client;
 
     public AWSContainerManager(IAWSCredentialProvider credentialProvider)

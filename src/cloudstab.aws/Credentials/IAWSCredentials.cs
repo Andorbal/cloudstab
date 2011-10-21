@@ -25,7 +25,7 @@
 using Amazon.Runtime;
 
 namespace cloudstab.aws.Credentials {
-  interface IAWSCredentialProvider {
+  public interface IAWSCredentialProvider {
     AWSCredentials GetCredentials();
   }
 }

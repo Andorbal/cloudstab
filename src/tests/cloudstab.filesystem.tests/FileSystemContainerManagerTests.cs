@@ -24,6 +24,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using SystemWrapper.IO;
@@ -104,15 +105,17 @@ namespace cloudstab.filesystem.tests {
     [TestCase("foo"), TestCase("bar")]
     public void Create_WithValidName_CreatesDirectory(string newDirectory) {
       // Arrange
+      var expectedPath = "test" + Path.DirectorySeparatorChar + newDirectory;
+
       var mockedDirectory = MockedDirectory();
-      mockedDirectory.Expect(x => x.CreateDirectory(newDirectory));
+      mockedDirectory.Expect(x => x.CreateDirectory(expectedPath));
       var testManager = new FileSystemContainerManager("test", mockedDirectory);
 
       // Act
       testManager.Create(newDirectory);
 
       // Assert
-      mockedDirectory.AssertWasCalled(x => x.CreateDirectory(newDirectory));
+      mockedDirectory.AssertWasCalled(x => x.CreateDirectory(expectedPath));
     }
 
     [TestCase("foo"), TestCase("bar")]
@@ -141,17 +144,19 @@ namespace cloudstab.filesystem.tests {
     [TestCase("foo"), TestCase("bar")]
     public void Delete_WithValidName_DeletesContainer(string directoryName) {
       // Arrange
+      var expectedPath = "test" + System.IO.Path.DirectorySeparatorChar + directoryName;
+
       var mockedDirectory = MockedDirectory();
-      mockedDirectory.Expect(x => x.Delete(directoryName, true));
+      mockedDirectory.Expect(x => x.Delete(expectedPath, true));
       var testManager = new FileSystemContainerManager("test", mockedDirectory);
 
       // Act
       testManager.Delete(directoryName);
 
       // Assert
-      mockedDirectory.AssertWasCalled(x => x.Delete(directoryName, true));
+      mockedDirectory.AssertWasCalled(x => x.Delete(expectedPath, true));
     }
-
+    
     [TestCase("foo"), TestCase("bar")]
     public void Delete_WithDirectoryName_ChecksProperPath(string directoryName) {
       // Arrange

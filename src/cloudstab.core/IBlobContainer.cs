@@ -31,6 +31,7 @@ namespace cloudstab.core {
     void AddObject(object key, object blob);
     void DeleteObject(object key);
     IBlobObject GetObject(object key);
+	  string Name { get; }
 	}
 }
 
