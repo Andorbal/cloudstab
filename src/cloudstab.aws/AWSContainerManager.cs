@@ -25,18 +25,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Amazon.Runtime;
+using Amazon.S3;
+using Amazon.S3.Model;
 using cloudstab.aws.Credentials;
 using cloudstab.core;
 
 namespace cloudstab.aws {
   class AWSContainerManager : IBlobContainerManager {
-    public AWSContainerManager(IAWSCredentialProvider credentials) {
-      
+    private AmazonS3 _client;
+
+    public AWSContainerManager(IAWSCredentialProvider credentialProvider) : this(credentialProvider.GetCredentials()) {
+    }
+
+    public AWSContainerManager(AWSCredentials credentials) {
+      _client = new AmazonS3Client(credentials);
     }
 
     public IEnumerable<IBlobContainer> List() {
-      throw new NotImplementedException();
+      using (ListBucketsResponse response = _client.ListBuckets()) {
+        return response.Buckets.Select(x => new AWSContainer(_client, x));
+      }
     }
 
     public IBlobContainer Get(string name) {

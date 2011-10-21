@@ -22,10 +22,38 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  THE POSSIBILITY OF SUCH DAMAGE.
  */
-using Amazon.Runtime;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Amazon.S3;
+using Amazon.S3.Model;
+using cloudstab.core;
 
-namespace cloudstab.aws.Credentials {
-  interface IAWSCredentialProvider {
-    AWSCredentials GetCredentials();
+namespace cloudstab.aws {
+  class AWSContainer : IBlobContainer {
+    private AmazonS3 _client;
+    private S3Bucket _bucket;
+
+    public AWSContainer(AmazonS3 client, S3Bucket bucket) {
+      _client = client;
+      _bucket = bucket;
+    }
+
+    public IEnumerable<IBlobObject> ListObjects() {
+      throw new NotImplementedException();
+    }
+
+    public void AddObject(object key, object blob) {
+      throw new NotImplementedException();
+    }
+
+    public void DeleteObject(object key) {
+      throw new NotImplementedException();
+    }
+
+    public IBlobObject GetObject(object key) {
+      throw new NotImplementedException();
+    }
   }
 }

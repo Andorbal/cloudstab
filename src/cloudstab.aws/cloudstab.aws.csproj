@@ -36,8 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="AWSContainer.cs" />
     <Compile Include="AWSContainerManager.cs" />
-    <Compile Include="Credentials\AWSCredentials.cs" />
     <Compile Include="Credentials\IAWSCredentials.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
