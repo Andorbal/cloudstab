@@ -24,6 +24,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SystemWrapper.IO;
 using cloudstab.core;
@@ -48,11 +49,12 @@ namespace cloudstab.filesystem {
     #region "IBlobContainerManager Implementation"
     public IEnumerable<IBlobContainer> List() {
       return _directoryWrapper.GetDirectories(_rootPath)
-        .OfType<string>()
         .Select(x => new FileSystemContainer(x));
     }
 
     public IBlobContainer Create(string name) {
+      EnsureNameIsValid(name);
+      
       _directoryWrapper.CreateDirectory(name);
       return new FileSystemContainer(name);
     }
@@ -62,7 +64,17 @@ namespace cloudstab.filesystem {
     }
 
     public void Delete(string name) {
-      throw new NotImplementedException();
+      EnsureNameIsValid(name);
+
+      if (_directoryWrapper.Exists(Path.Combine(_rootPath, name))) {
+        _directoryWrapper.Delete(name, true);
+      }
+    }
+
+    private static void EnsureNameIsValid(string name) {
+      if (string.IsNullOrWhiteSpace(name)) {
+        throw new ArgumentException("Container name cannot be empty.", "name");
+      }
     }
     #endregion
   }

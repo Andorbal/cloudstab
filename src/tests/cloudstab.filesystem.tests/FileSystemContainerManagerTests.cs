@@ -78,8 +78,8 @@ namespace cloudstab.filesystem.tests {
     public void List_ReturnsDirectoryListing(string rootPath) {
       // Arrange
       var mockedDirectory = MockedDirectory();
-      mockedDirectory.Stub(x => x.GetDirectories(rootPath)).Return(new[] {"a", "b", "c"});
-   
+      mockedDirectory.Stub(x => x.GetDirectories(rootPath)).Return(new[] { "a", "b", "c" });
+
       var testManager = new FileSystemContainerManager(rootPath, mockedDirectory);
 
       // Act
@@ -90,6 +90,15 @@ namespace cloudstab.filesystem.tests {
       Assert.IsTrue(results.OfType<FileSystemContainer>().Any(x => x.DirectoryPath == "a"));
       Assert.IsTrue(results.OfType<FileSystemContainer>().Any(x => x.DirectoryPath == "b"));
       Assert.IsTrue(results.OfType<FileSystemContainer>().Any(x => x.DirectoryPath == "c"));
+    }
+
+    [TestCase(""), TestCase(null), TestCase(" "), TestCase("\t")]
+    public void Create_WithEmptyName_ThrowsArgumentException(string directoryName) {
+      // Arrange
+      var testManager = new FileSystemContainerManager("test", MockedDirectory());
+
+      // Act & Assert
+      Assert.Throws<ArgumentException>(() => testManager.Create(directoryName));
     }
 
     [TestCase("foo"), TestCase("bar")]
@@ -117,12 +126,66 @@ namespace cloudstab.filesystem.tests {
       var result = testManager.Create(newDirectory);
 
       // Assert
-      Assert.That(((FileSystemContainer) result).DirectoryPath, Is.EqualTo(newDirectory));
+      Assert.That(((FileSystemContainer)result).DirectoryPath, Is.EqualTo(newDirectory));
     }
 
-    private IDirectoryWrap MockedDirectory() {
+    [TestCase(""), TestCase(null), TestCase(" "), TestCase("\t")]
+    public void Delete_WithEmptyName_ThrowsArgumentException(string directoryName) {
+      // Arrange
+      var testManager = new FileSystemContainerManager("test", MockedDirectory());
+
+      // Act & Assert
+      Assert.Throws<ArgumentException>(() => testManager.Delete(directoryName));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Delete_WithValidName_DeletesContainer(string directoryName) {
+      // Arrange
+      var mockedDirectory = MockedDirectory();
+      mockedDirectory.Expect(x => x.Delete(directoryName, true));
+      var testManager = new FileSystemContainerManager("test", mockedDirectory);
+
+      // Act
+      testManager.Delete(directoryName);
+
+      // Assert
+      mockedDirectory.AssertWasCalled(x => x.Delete(directoryName, true));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Delete_WithDirectoryName_ChecksProperPath(string directoryName) {
+      // Arrange
+      var expectedPath = "test" + System.IO.Path.DirectorySeparatorChar + directoryName;
+
+      var mockedDirectory = MockRepository.GenerateMock<IDirectoryWrap>();
+      mockedDirectory.Expect(x => x.Exists(expectedPath)).Return(false);
+      var testManager = new FileSystemContainerManager("test", mockedDirectory);
+
+      // Act
+      testManager.Delete(directoryName);
+
+      // Assert
+      mockedDirectory.AssertWasCalled(x => x.Exists(expectedPath));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Delete_DirectoryDoesNotExist_DoesNotCallDelete(string directoryName) {
+      // Arrange
+      var mockedDirectory = MockedDirectory(false);
+      mockedDirectory.Expect(x => x.Delete(directoryName, true));
+      var testManager = new FileSystemContainerManager("test", mockedDirectory);
+
+      // Act
+      testManager.Delete(directoryName);
+
+      // Assert
+      mockedDirectory.AssertWasNotCalled(x => x.Delete(directoryName, true));
+    }
+
+
+    private IDirectoryWrap MockedDirectory(bool exists = true) {
       var testDirectory = MockRepository.GenerateMock<IDirectoryWrap>();
-      testDirectory.Stub(x => x.Exists(null)).IgnoreArguments().Return(true);
+      testDirectory.Stub(x => x.Exists(null)).IgnoreArguments().Return(exists);
       return testDirectory;
     }
   }
