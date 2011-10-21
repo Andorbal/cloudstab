@@ -25,39 +25,86 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using cloudstab.aws.Credentials;
 using cloudstab.core;
+using cloudstab.core.Exceptions;
 
 namespace cloudstab.aws {
   class AWSContainerManager : IBlobContainerManager {
     private AmazonS3 _client;
 
-    public AWSContainerManager(IAWSCredentialProvider credentialProvider) : this(credentialProvider.GetCredentials()) {
+    public AWSContainerManager(IAWSCredentialProvider credentialProvider)
+      : this(credentialProvider.GetCredentials()) {
     }
 
     public AWSContainerManager(AWSCredentials credentials) {
       _client = new AmazonS3Client(credentials);
     }
 
+    #region "IBlobContainerManager Implementation"
     public IEnumerable<IBlobContainer> List() {
-      using (ListBucketsResponse response = _client.ListBuckets()) {
-        return response.Buckets.Select(x => new AWSContainer(_client, x));
-      }
+      return GetBuckets().Select(x => new AWSContainer(_client, x));
     }
 
     public IBlobContainer Get(string name) {
-      throw new NotImplementedException();
+      return GetBuckets().Where(x => string.Equals(x.BucketName, name, StringComparison.OrdinalIgnoreCase))
+        .Select(x => new AWSContainer(_client, x))
+        .SingleOrDefault();
     }
 
     public IBlobContainer Create(string name) {
-      throw new NotImplementedException();
+      try {
+        var request = new PutBucketRequest() { BucketName = name };
+        _client.PutBucket(request);
+        return Get(name);
+      }
+      catch (AmazonS3Exception ex) {
+        if (IsSecurityException(ex)) {
+          throw new SecurityException(ex);
+        }
+
+        throw;
+      }
     }
 
     public void Delete(string name) {
-      throw new NotImplementedException();
+      try {
+        var request = new DeleteBucketRequest() { BucketName = name };
+        _client.DeleteBucket(request);
+      }
+      catch (AmazonS3Exception ex) {
+        if (IsSecurityException(ex)) {
+          throw new SecurityException(ex);
+        }
+
+        throw;
+      }
+    }
+    #endregion
+
+    private static bool IsSecurityException(string errorCode) {
+      return errorCode != null &&
+             (errorCode.Equals("InvalidAccessKeyId") ||
+              errorCode.Equals("InvalidSecurity"));
+    }
+
+    private List<S3Bucket> GetBuckets() {
+      try {
+        using (ListBucketsResponse response = _client.ListBuckets()) {
+          return response.Buckets;
+        }
+      }
+      catch (AmazonS3Exception ex) {
+        if (IsSecurityException(ex.ErrorCode)) {
+          throw new BlobSecurityException(ex);
+        }
+
+        throw;
+      }
     }
   }
 }

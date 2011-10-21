@@ -33,12 +33,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Exceptions\BlobSecurityException.cs" />
     <Compile Include="IBlobContainer.cs" />
     <Compile Include="IBlobContainerManager.cs" />
     <Compile Include="IBlobObject.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
