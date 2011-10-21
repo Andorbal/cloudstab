@@ -63,11 +63,7 @@ namespace cloudstab.aws {
         return Get(name);
       }
       catch (AmazonS3Exception ex) {
-        if (IsSecurityException(ex)) {
-          throw new SecurityException(ex);
-        }
-
-        throw;
+        throw WrapException(ex);
       }
     }
 
@@ -77,11 +73,7 @@ namespace cloudstab.aws {
         _client.DeleteBucket(request);
       }
       catch (AmazonS3Exception ex) {
-        if (IsSecurityException(ex)) {
-          throw new SecurityException(ex);
-        }
-
-        throw;
+        throw WrapException(ex);
       }
     }
     #endregion
@@ -94,17 +86,21 @@ namespace cloudstab.aws {
 
     private List<S3Bucket> GetBuckets() {
       try {
-        using (ListBucketsResponse response = _client.ListBuckets()) {
+        using (var response = _client.ListBuckets()) {
           return response.Buckets;
         }
       }
       catch (AmazonS3Exception ex) {
-        if (IsSecurityException(ex.ErrorCode)) {
-          throw new BlobSecurityException(ex);
-        }
-
-        throw;
+        throw WrapException(ex);
       }
+    }
+
+    private static Exception WrapException(AmazonS3Exception ex) {
+      if (IsSecurityException(ex.ErrorCode)) {
+        return new BlobSecurityException(ex);
+      }
+
+      return ex;
     }
   }
 }
