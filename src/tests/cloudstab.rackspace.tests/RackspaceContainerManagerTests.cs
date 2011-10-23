@@ -87,5 +87,50 @@ namespace cloudstab.rackspace.tests {
       // Assert
       Assert.That(result, Is.Null);
     }
+
+    [Test]
+    public void Create_WithInvalidName_ThrowsInvalidNameException() {
+      // Arrange
+      var manager = new RackspaceContainerManager(MockRepository.GenerateStub<IConnection>());
+
+      // Act & Assert
+      Assert.Throws<InvalidNameException>(() => manager.Create(null));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Create_WithValidName_ReturnsContainer(string name) {
+      // Arrange
+      var container = MockRepository.GenerateStub<IContainer>();
+      container.Stub(x => x.Name).Return(name);
+      var account = MockRepository.GenerateStub<IAccount>();
+      account.Stub(x => x.ContainerExists(name)).Return(false);
+      account.Stub(x => x.CreateContainer(name)).Return(container);
+
+      var manager = new RackspaceContainerManager() { Account = account };
+
+      // Act
+      var result = manager.Create(name);
+
+      // Assert
+      Assert.That(result.Name, Is.EqualTo(name));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Create_ExistingContainer_ReturnsContainer(string name) {
+      // Arrange
+      var container = MockRepository.GenerateStub<IContainer>();
+      container.Stub(x => x.Name).Return(name);
+      var account = MockRepository.GenerateStub<IAccount>();
+      account.Stub(x => x.ContainerExists(name)).Return(true);
+      account.Stub(x => x.GetContainer(name)).Return(container);
+
+      var manager = new RackspaceContainerManager() { Account = account };
+
+      // Act
+      var result = manager.Create(name);
+
+      // Assert
+      Assert.That(result.Name, Is.EqualTo(name));
+    }
   }
 }

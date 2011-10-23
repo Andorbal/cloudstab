@@ -82,7 +82,13 @@ namespace cloudstab.rackspace {
     /// <param name="name">Name of the container to create.</param>
     /// <returns>The newly created container, or the existing container if it already exists.</returns>
     public IBlobContainer Create(string name) {
-      throw new System.NotImplementedException();
+      BlobContainerUtilities.EnsureValidContainerName(name);
+
+      if (Account.ContainerExists(name)) {
+        return new RackspaceContainer(Account.GetContainer(name));
+      }
+
+      return new RackspaceContainer(Account.CreateContainer(name));
     }
 
     /// <summary>
