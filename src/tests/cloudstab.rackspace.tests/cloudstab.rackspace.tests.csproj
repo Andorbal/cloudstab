@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{97471508-0C42-41AE-882E-3F6CFEAEBAF4}</ProjectGuid>
+    <ProjectGuid>{1D6E0940-A06F-4D35-9D43-A503F58899D8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>cloudstab.rackspace</RootNamespace>
-    <AssemblyName>cloudstab.rackspace</AssemblyName>
+    <RootNamespace>cloudstab.rackspace.tests</RootNamespace>
+    <AssemblyName>cloudstab.rackspace.tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -34,10 +34,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Rackspace.CloudFiles">
-      <HintPath>..\packages\csharp-cloudfiles.2.0.0.40\lib\net35\Rackspace.CloudFiles.dll</HintPath>
+      <HintPath>..\..\packages\csharp-cloudfiles.2.0.0.40\lib\net35\Rackspace.CloudFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\packages\RhinoMocks.3.6\lib\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,17 +61,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RackspaceContainer.cs" />
-    <Compile Include="RackspaceContainerManager.cs" />
+    <Compile Include="RackspaceContainerManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Log4Net.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cloudstab.core\cloudstab.core.csproj">
+    <ProjectReference Include="..\..\cloudstab.core\cloudstab.core.csproj">
       <Project>{85714794-A3D8-46CF-9C1D-5072D493BFC6}</Project>
       <Name>cloudstab.core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\cloudstab.rackspace\cloudstab.rackspace.csproj">
+      <Project>{97471508-0C42-41AE-882E-3F6CFEAEBAF4}</Project>
+      <Name>cloudstab.rackspace</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

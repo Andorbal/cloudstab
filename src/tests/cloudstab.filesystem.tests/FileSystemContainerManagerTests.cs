@@ -22,7 +22,6 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 using System.IO;
 using System.Linq;
 using cloudstab.core.Exceptions;
@@ -209,7 +208,7 @@ namespace cloudstab.filesystem.tests {
       Assert.That(container.Name, Is.EqualTo(directoryName));
     }
 
-    [Test]
+    [TestCase("foo"), TestCase("bar")]
     public void Get_WithNonExistentContainer_ReturnsNull(string directoryName) {
       // Arrange
       var mockedDirectory = MockRepository.GenerateStub<IDirectoryWrap>();
@@ -220,7 +219,7 @@ namespace cloudstab.filesystem.tests {
       var container = testManager.Get("baz");
 
       // Assert
-      Assert.That(container.Name, Is.Null);
+      Assert.That(container, Is.Null);
     }
 
 
