@@ -27,13 +27,28 @@ using System.Collections.Generic;
 using System.Linq;
 using cloudstab.core;
 using Rackspace.CloudFiles;
+using Rackspace.CloudFiles.Domain;
 
 namespace cloudstab.rackspace {
   public class RackspaceContainerManager : IBlobContainerManager {
     private IConnection _connection;
+    private IAccount _account;
+
+    internal RackspaceContainerManager() {}
 
     public RackspaceContainerManager(IConnection connection) {
       _connection = connection;
+      _account = _connection.Account;
+    }
+
+    internal IAccount Account {
+      get { return _account; } 
+      set { _account = value; }
+    }
+
+    internal IConnection Connection {
+       get { return _connection; }
+       set { _connection = value; }
     }
 
     #region Implementation of IBlobContainerManager
@@ -54,8 +69,8 @@ namespace cloudstab.rackspace {
     public IBlobContainer Get(string name) {
       BlobContainerUtilities.EnsureValidContainerName(name);
 
-      if (_connection.Account.ContainerExists(name)) {
-        return new RackspaceContainer(_connection.Account.GetContainer(name));  
+      if (Account.ContainerExists(name)) {
+        return new RackspaceContainer(Account.GetContainer(name));
       }
 
       return null;

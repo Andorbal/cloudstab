@@ -25,11 +25,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using cloudstab.core.Exceptions;
 using NUnit.Framework;
 using Rackspace.CloudFiles;
 using Rackspace.CloudFiles.Domain;
 using Rhino.Mocks;
-using cloudstab.core.Exceptions;
 
 namespace cloudstab.rackspace.tests {
   [TestFixture]
@@ -66,10 +66,8 @@ namespace cloudstab.rackspace.tests {
       var account = MockRepository.GenerateStub<IAccount>();
       account.Stub(x => x.ContainerExists(name)).Return(true);
       account.Stub(x => x.GetContainer(name)).Return(container);
-      var connection = MockRepository.GenerateStub<IConnection>();
-      connection.Stub(x => x.Account).Return(account);
 
-      var manager = new RackspaceContainerManager(connection);
+      var manager = new RackspaceContainerManager() {Account = account};
 
       // Act
       var result = manager.Get(name);
@@ -81,12 +79,7 @@ namespace cloudstab.rackspace.tests {
     [TestCase("foo"), TestCase("bar")]
     public void Get_NonExistentContainer_ReturnsNull(string name) {
       // Arrange
-      var account = MockRepository.GenerateStub<IAccount>();
-      account.Stub(x => x.ContainerExists(name)).Return(false);
-      var connection = MockRepository.GenerateStub<IConnection>();
-      connection.Stub(x => x.Account).Return(account);
-
-      var manager = new RackspaceContainerManager(connection);
+      var manager = new RackspaceContainerManager() { Account = MockRepository.GenerateStub<IAccount>() };
 
       // Act
       var result = manager.Get(name);
