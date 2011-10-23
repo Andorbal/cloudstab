@@ -71,9 +71,7 @@ namespace cloudstab.memory {
     /// <param name="name">Name of the container to create.</param>
     /// <returns>The newly created container, or the existing container if it already exists.</returns>
     public IBlobContainer Create(string name) {
-      if (string.IsNullOrEmpty(name)) {
-        throw new InvalidNameException(name);
-      }
+      EnsureValidName(name);
 
       if (!_store.ContainsKey(name)) {
         _store.Add(name, new MemoryContainer(name));
@@ -87,9 +85,16 @@ namespace cloudstab.memory {
     /// </summary>
     /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
-      throw new NotImplementedException();
-    }
+      EnsureValidName(name);
 
+      _store.Remove(name);
+    }
     #endregion
+    
+    private static void EnsureValidName(string name) {
+      if (string.IsNullOrEmpty(name)) {
+        throw new InvalidNameException(name);
+      }
+    }
   }
 }

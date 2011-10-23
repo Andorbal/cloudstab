@@ -112,7 +112,7 @@ namespace cloudstab.memory.tests {
 
       // Act
       var container = testManager.Get("foo");
-      
+
       // Assert
       Assert.That(container, Is.Null);
     }
@@ -134,7 +134,7 @@ namespace cloudstab.memory.tests {
       // Arrange
       var fooContainer = MockRepository.GenerateStub<IBlobContainer>();
       var barContainer = MockRepository.GenerateStub<IBlobContainer>();
-      var store = new Dictionary<string, IBlobContainer> {{"foo", fooContainer}, {"bar", barContainer}};
+      var store = new Dictionary<string, IBlobContainer> { { "foo", fooContainer }, { "bar", barContainer } };
       var testManager = new MemoryContainerManager(store);
 
       // Act
@@ -144,6 +144,42 @@ namespace cloudstab.memory.tests {
       Assert.That(containers.Count(), Is.EqualTo(2));
       Assert.That(containers, Has.Member(fooContainer));
       Assert.That(containers, Has.Member(barContainer));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Delete_WithExistingContainer_ContainerIsDeleted(string name) {
+      // Arrange
+      var store = new Dictionary<string, IBlobContainer> { 
+          { "foo", MockRepository.GenerateStub<IBlobContainer>() }, 
+          { "bar", MockRepository.GenerateStub<IBlobContainer>() } 
+      };
+      var deletedContainer = store[name];
+      var testManager = new MemoryContainerManager(store);
+
+      // Act
+      testManager.Delete(name);
+
+      // Assert
+      Assert.That(store, Has.No.Member(deletedContainer));
+      Assert.That(store.Keys.Count(), Is.EqualTo(1));
+    }
+
+    [TestCase(""), TestCase(null)]
+    public void Delete_WithInvalidName_ThrowsInvalidNameException(string name) {
+      // Arrange
+      var testManager = new MemoryContainerManager();
+
+      // Act
+      Assert.Throws<InvalidNameException>(() => testManager.Delete(name));
+    }
+
+    [Test]
+    public void Delete_WithNonExistentContainer_NoExceptionIsThrown() {
+      // Arrange
+      var testManager = new MemoryContainerManager();
+
+      // Act & Assert
+      Assert.DoesNotThrow(() => testManager.Delete("foo"));
     }
   }
 }
