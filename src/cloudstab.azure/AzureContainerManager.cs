@@ -58,6 +58,8 @@ namespace cloudstab.azure {
     /// <param name="name">Name of the container to retrieve.</param>
     /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public IBlobContainer Get(string name) {
+      BlobContainerUtilities.EnsureValidContainerName(name);
+
       try {
         return new AzureContainer(_client.GetContainerReference(name));
       }
@@ -72,6 +74,8 @@ namespace cloudstab.azure {
     /// <param name="name">Name of the container to create.</param>
     /// <returns>The newly created container, or the existing container if it already exists.</returns>
     public IBlobContainer Create(string name) {
+      BlobContainerUtilities.EnsureValidContainerName(name);
+
       try {
         var container = _client.GetContainerReference(name);
         container.CreateIfNotExist();
@@ -87,6 +91,8 @@ namespace cloudstab.azure {
     /// </summary>
     /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
+      BlobContainerUtilities.EnsureValidContainerName(name);
+
       try {
         var container = _client.GetContainerReference(name);
         container.Delete();
@@ -98,7 +104,9 @@ namespace cloudstab.azure {
     #endregion
 
     private Exception WrapException(StorageClientException ex) {
-      if (ex.ErrorCode == StorageErrorCode.AccessDenied || ex.ErrorCode == StorageErrorCode.AccountNotFound || ex.ErrorCode == StorageErrorCode.AuthenticationFailure) {
+      if (ex.ErrorCode == StorageErrorCode.AccessDenied 
+          || ex.ErrorCode == StorageErrorCode.AccountNotFound 
+          || ex.ErrorCode == StorageErrorCode.AuthenticationFailure) {
         return new BlobSecurityException(ex);
       }
 

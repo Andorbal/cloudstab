@@ -22,14 +22,12 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using SystemWrapper.IO;
+using cloudstab.core.Exceptions;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SystemWrapper.IO;
 
 namespace cloudstab.filesystem.tests {
   [TestFixture]
@@ -94,12 +92,12 @@ namespace cloudstab.filesystem.tests {
     }
 
     [TestCase(""), TestCase(null), TestCase(" "), TestCase("\t")]
-    public void Create_WithEmptyName_ThrowsArgumentException(string directoryName) {
+    public void Create_WithEmptyName_ThrowsInvalidNameException(string directoryName) {
       // Arrange
       var testManager = new FileSystemContainerManager("test", MockedDirectory());
 
       // Act & Assert
-      Assert.Throws<ArgumentException>(() => testManager.Create(directoryName));
+      Assert.Throws<InvalidNameException>(() => testManager.Create(directoryName));
     }
 
     [TestCase("foo"), TestCase("bar")]
@@ -133,12 +131,12 @@ namespace cloudstab.filesystem.tests {
     }
 
     [TestCase(""), TestCase(null), TestCase(" "), TestCase("\t")]
-    public void Delete_WithEmptyName_ThrowsArgumentException(string directoryName) {
+    public void Delete_WithEmptyName_ThrowsInvalidNameException(string directoryName) {
       // Arrange
       var testManager = new FileSystemContainerManager("test", MockedDirectory());
 
       // Act & Assert
-      Assert.Throws<ArgumentException>(() => testManager.Delete(directoryName));
+      Assert.Throws<InvalidNameException>(() => testManager.Delete(directoryName));
     }
 
     [TestCase("foo"), TestCase("bar")]

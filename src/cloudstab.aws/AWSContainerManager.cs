@@ -59,6 +59,8 @@ namespace cloudstab.aws {
     /// <param name="name">Name of the container to retrieve.</param>
     /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public IBlobContainer Get(string name) {
+      BlobContainerUtilities.EnsureValidContainerName(name);
+
       return GetBuckets().Where(x => string.Equals(x.BucketName, name, StringComparison.OrdinalIgnoreCase))
         .Select(x => new AWSContainer(_client, x))
         .SingleOrDefault();
@@ -70,6 +72,8 @@ namespace cloudstab.aws {
     /// <param name="name">Name of the container to create.</param>
     /// <returns>The newly created container, or the existing container if it already exists.</returns>
     public IBlobContainer Create(string name) {
+      BlobContainerUtilities.EnsureValidContainerName(name);
+
       try {
         var request = new PutBucketRequest() { BucketName = name };
         _client.PutBucket(request);
@@ -85,6 +89,8 @@ namespace cloudstab.aws {
     /// </summary>
     /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
+      BlobContainerUtilities.EnsureValidContainerName(name);
+
       try {
         var request = new DeleteBucketRequest() { BucketName = name };
         _client.DeleteBucket(request);
