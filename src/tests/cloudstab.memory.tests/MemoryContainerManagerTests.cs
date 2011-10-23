@@ -79,7 +79,7 @@ namespace cloudstab.memory.tests {
     public void Create_WithNameThatAlreadyExists_ReturnsExistingContainer() {
       // Arrange
       var testContainer = MockRepository.GenerateStub<IBlobContainer>();
-      var store = new Dictionary<string, IBlobContainer> {{"foo", testContainer}};
+      var store = new Dictionary<string, IBlobContainer> { { "foo", testContainer } };
       var testManager = new MemoryContainerManager(store);
 
       // Act
@@ -87,6 +87,34 @@ namespace cloudstab.memory.tests {
 
       // Assert
       Assert.That(container, Is.EqualTo(testContainer));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Get_WithExistingName_ReturnsContainerWithSpecifiedName(string name) {
+      // Arrange
+      var store = new Dictionary<string, IBlobContainer> {
+                                                           { "foo", MockRepository.GenerateStub<IBlobContainer>() }, 
+                                                           { "bar", MockRepository.GenerateStub<IBlobContainer>() }
+                                                         };
+      var testManager = new MemoryContainerManager(store);
+
+      // Act
+      var container = testManager.Get(name);
+
+      // Assert
+      Assert.That(container, Is.EqualTo(store[name]));
+    }
+
+    [Test]
+    public void Get_WithNonExistentName_ReturnsNull() {
+      // Arrange
+      var testManager = new MemoryContainerManager();
+
+      // Act
+      var container = testManager.Get("foo");
+      
+      // Assert
+      Assert.That(container, Is.Null);
     }
   }
 }

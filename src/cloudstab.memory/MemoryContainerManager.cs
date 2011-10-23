@@ -58,7 +58,11 @@ namespace cloudstab.memory {
     /// <param name="name">Name of the container to retrieve.</param>
     /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public IBlobContainer Get(string name) {
-      throw new NotImplementedException();
+      if (_store.ContainsKey(name)) {
+        return _store[name];
+      }
+
+      return null;
     }
 
     /// <summary>
