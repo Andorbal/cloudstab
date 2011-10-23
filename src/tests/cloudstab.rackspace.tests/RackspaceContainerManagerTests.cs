@@ -124,7 +124,7 @@ namespace cloudstab.rackspace.tests {
       account.Stub(x => x.ContainerExists(name)).Return(true);
       account.Stub(x => x.GetContainer(name)).Return(container);
 
-      var manager = new RackspaceContainerManager() { Account = account };
+      var manager = new RackspaceContainerManager { Account = account };
 
       // Act
       var result = manager.Create(name);
@@ -149,7 +149,7 @@ namespace cloudstab.rackspace.tests {
       account.Stub(x => x.ContainerExists(name)).Return(true);
       account.Expect(x => x.DeleteContainer(name));
 
-      var manager = new RackspaceContainerManager() { Account = account };
+      var manager = new RackspaceContainerManager { Account = account };
 
       // Act
       manager.Delete(name);
@@ -165,7 +165,7 @@ namespace cloudstab.rackspace.tests {
       account.Stub(x => x.ContainerExists(name)).Return(false);
       account.Expect(x => x.DeleteContainer(name));
 
-      var manager = new RackspaceContainerManager() { Account = account };
+      var manager = new RackspaceContainerManager { Account = account };
 
       // Act
       manager.Delete(name);
