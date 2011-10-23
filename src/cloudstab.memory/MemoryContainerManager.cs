@@ -26,7 +26,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using cloudstab.core;
-using cloudstab.core.Exceptions;
 
 namespace cloudstab.memory {
   public class MemoryContainerManager : IBlobContainerManager {
@@ -58,7 +57,7 @@ namespace cloudstab.memory {
     /// <param name="name">Name of the container to retrieve.</param>
     /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public IBlobContainer Get(string name) {
-      EnsureValidName(name);
+      BlobContainerUtilities.EnsureValidContainerName(name);
       
       if (_store.ContainsKey(name)) {
         return _store[name];
@@ -73,7 +72,7 @@ namespace cloudstab.memory {
     /// <param name="name">Name of the container to create.</param>
     /// <returns>The newly created container, or the existing container if it already exists.</returns>
     public IBlobContainer Create(string name) {
-      EnsureValidName(name);
+      BlobContainerUtilities.EnsureValidContainerName(name);
 
       if (!_store.ContainsKey(name)) {
         _store.Add(name, new MemoryContainer(name));
@@ -87,16 +86,10 @@ namespace cloudstab.memory {
     /// </summary>
     /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
-      EnsureValidName(name);
+      BlobContainerUtilities.EnsureValidContainerName(name);
 
       _store.Remove(name);
     }
     #endregion
-    
-    private static void EnsureValidName(string name) {
-      if (string.IsNullOrEmpty(name)) {
-        throw new InvalidNameException(name);
-      }
-    }
   }
 }

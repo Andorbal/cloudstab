@@ -1,4 +1,4 @@
-/*
+﻿/*
 	Copyright (c) 2011, Andrew Benz
 	All rights reserved.
 	
@@ -22,15 +22,23 @@
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
 	THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using cloudstab.core.Exceptions;
 
 namespace cloudstab.core {
-	public interface IBlobContainer {
-    IEnumerable<IBlobObject> ListObjects();
-    void AddObject(object key, object blob);
-    void DeleteObject(object key);
-    IBlobObject GetObject(object key);
-	  string Name { get; }
-	}
-}
+  public static class BlobContainerUtilities {
+    public static void EnsureValidContainerName(string name) {
+      if (name == null) {
+        throw new InvalidNameException(name, "Container names cannot be null.");
+      }
 
+      if (name.Length > 63 || name.Length < 3) {
+        throw new InvalidNameException(name, "Container names must be between 3 and 63 characters.");
+      }
+
+      if (!Regex.IsMatch(name, @"^([a-z0-9]+[\-]?)*[a-z0-9]$")) {
+        throw new InvalidNameException(name);
+      }
+    }
+  }
+}

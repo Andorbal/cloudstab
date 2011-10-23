@@ -35,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="BlobContainerUtilities.cs" />
     <Compile Include="Exceptions\BlobSecurityException.cs" />
     <Compile Include="Exceptions\InvalidNameException.cs" />
     <Compile Include="IBlobContainer.cs" />
