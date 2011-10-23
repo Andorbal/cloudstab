@@ -22,7 +22,6 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,6 +31,7 @@ using SystemWrapper.IO;
 namespace cloudstab.filesystem {
   public class FileSystemContainerManager : IBlobContainerManager {
     private readonly string _rootPath;
+    private readonly IDirectoryWrap _directoryWrapper;
     
     public FileSystemContainerManager(string rootPath) : this(rootPath, new DirectoryWrap()) { }
 
@@ -44,16 +44,13 @@ namespace cloudstab.filesystem {
       }
     }
 
-    private readonly IDirectoryWrap _directoryWrapper;
-
     #region "IBlobContainerManager Implementation"
     /// <summary>
     /// Lists all the containers in the store.
     /// </summary>
     /// <returns>A list of all the containers currently in the store.</returns>
     public IEnumerable<IBlobContainer> List() {
-      return _directoryWrapper.GetDirectories(_rootPath)
-        .Select(x => new FileSystemContainer(x));
+      return GetDirectories().Select(x => new FileSystemContainer(x));
     }
 
     /// <summary>
@@ -74,7 +71,14 @@ namespace cloudstab.filesystem {
     /// <param name="name">Name of the container to retrieve.</param>
     /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public IBlobContainer Get(string name) {
-      throw new NotImplementedException();
+      BlobContainerUtilities.EnsureValidContainerName(name);
+      
+      var path = GetDirectories().Where(x => x == name).SingleOrDefault();
+      if (path == null) {
+        return null;
+      }
+
+      return new FileSystemContainer(path);
     }
 
     /// <summary>
@@ -94,6 +98,10 @@ namespace cloudstab.filesystem {
 
     private string GetContainerPath(string name) {
       return Path.Combine(_rootPath, name);
+    }
+
+    private IEnumerable<string> GetDirectories() {
+      return _directoryWrapper.GetDirectories(_rootPath);
     }
   }
 }

@@ -22,6 +22,7 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 using System.IO;
 using System.Linq;
 using cloudstab.core.Exceptions;
@@ -158,7 +159,7 @@ namespace cloudstab.filesystem.tests {
     [TestCase("foo"), TestCase("bar")]
     public void Delete_WithDirectoryName_ChecksProperPath(string directoryName) {
       // Arrange
-      var expectedPath = "test" + System.IO.Path.DirectorySeparatorChar + directoryName;
+      var expectedPath = "test" + Path.DirectorySeparatorChar + directoryName;
 
       var mockedDirectory = MockRepository.GenerateMock<IDirectoryWrap>();
       mockedDirectory.Expect(x => x.Exists(expectedPath)).Return(false);
@@ -184,6 +185,44 @@ namespace cloudstab.filesystem.tests {
       // Assert
       mockedDirectory.AssertWasNotCalled(x => x.Delete(directoryName, true));
     }
+
+    [TestCase(null), TestCase("")]
+    public void Get_WithInvalidName_ThrowsInvalidNameException(string name) {
+      // Arrange
+      var testManager = new FileSystemContainerManager("test", MockedDirectory());
+
+      // Act & Assert
+      Assert.Throws<InvalidNameException>(() => testManager.Get(name));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Get_WithExistingContainer_ReturnsSelectedContainer(string directoryName) {
+      // Arrange
+      var mockedDirectory = MockRepository.GenerateStub<IDirectoryWrap>();
+      mockedDirectory.Stub(x => x.GetDirectories("test")).Return(new[] { "foo", "bar" });
+      var testManager = new FileSystemContainerManager("test", mockedDirectory);
+
+      // Act
+      var container = testManager.Get(directoryName);
+
+      // Assert
+      Assert.That(container.Name, Is.EqualTo(directoryName));
+    }
+
+    [Test]
+    public void Get_WithNonExistentContainer_ReturnsNull(string directoryName) {
+      // Arrange
+      var mockedDirectory = MockRepository.GenerateStub<IDirectoryWrap>();
+      mockedDirectory.Stub(x => x.GetDirectories("test")).Return(new[] { "foo", "bar" });
+      var testManager = new FileSystemContainerManager("test", mockedDirectory);
+
+      // Act
+      var container = testManager.Get("baz");
+
+      // Assert
+      Assert.That(container.Name, Is.Null);
+    }
+
 
 
     private IDirectoryWrap MockedDirectory(bool exists = true) {
