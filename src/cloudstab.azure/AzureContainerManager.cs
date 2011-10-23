@@ -25,10 +25,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
 using cloudstab.core;
 using cloudstab.core.Exceptions;
+using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.StorageClient;
 
 namespace cloudstab.azure {
   public class AzureContainerManager : IBlobContainerManager {
@@ -39,6 +39,10 @@ namespace cloudstab.azure {
     }
 
     #region Implementation of IBlobContainerManager
+    /// <summary>
+    /// Lists all the containers in the store.
+    /// </summary>
+    /// <returns>A list of all the containers currently in the store.</returns>
     public IEnumerable<IBlobContainer> List() {
       try {
         return _client.ListContainers().Select(x => new AzureContainer(x));
@@ -48,6 +52,11 @@ namespace cloudstab.azure {
       }
     }
 
+    /// <summary>
+    /// Gets the container with the specified name.
+    /// </summary>
+    /// <param name="name">Name of the container to retrieve.</param>
+    /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public IBlobContainer Get(string name) {
       try {
         return new AzureContainer(_client.GetContainerReference(name));
@@ -57,6 +66,11 @@ namespace cloudstab.azure {
       }
     }
 
+    /// <summary>
+    /// Creates a new container if it doesn't already exist.
+    /// </summary>
+    /// <param name="name">Name of the container to create.</param>
+    /// <returns>The newly created container, or the existing container if it already exists.</returns>
     public IBlobContainer Create(string name) {
       try {
         var container = _client.GetContainerReference(name);
@@ -68,6 +82,10 @@ namespace cloudstab.azure {
       }
     }
 
+    /// <summary>
+    /// Deletes the container with the specified name.
+    /// </summary>
+    /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
       try {
         var container = _client.GetContainerReference(name);

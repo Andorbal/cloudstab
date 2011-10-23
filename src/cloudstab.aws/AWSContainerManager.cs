@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -46,16 +45,30 @@ namespace cloudstab.aws {
     }
 
     #region "IBlobContainerManager Implementation"
+    /// <summary>
+    /// Lists all the containers in the store.
+    /// </summary>
+    /// <returns>A list of all the containers currently in the store.</returns>
     public IEnumerable<IBlobContainer> List() {
       return GetBuckets().Select(x => new AWSContainer(_client, x));
     }
 
+    /// <summary>
+    /// Gets the container with the specified name.
+    /// </summary>
+    /// <param name="name">Name of the container to retrieve.</param>
+    /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public IBlobContainer Get(string name) {
       return GetBuckets().Where(x => string.Equals(x.BucketName, name, StringComparison.OrdinalIgnoreCase))
         .Select(x => new AWSContainer(_client, x))
         .SingleOrDefault();
     }
 
+    /// <summary>
+    /// Creates a new container if it doesn't already exist.
+    /// </summary>
+    /// <param name="name">Name of the container to create.</param>
+    /// <returns>The newly created container, or the existing container if it already exists.</returns>
     public IBlobContainer Create(string name) {
       try {
         var request = new PutBucketRequest() { BucketName = name };
@@ -67,6 +80,10 @@ namespace cloudstab.aws {
       }
     }
 
+    /// <summary>
+    /// Deletes the container with the specified name.
+    /// </summary>
+    /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
       try {
         var request = new DeleteBucketRequest() { BucketName = name };

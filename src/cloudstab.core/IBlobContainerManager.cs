@@ -22,14 +22,34 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System;
 using System.Collections.Generic;
 
 namespace cloudstab.core {
   public interface IBlobContainerManager {
+    /// <summary>
+    /// Lists all the containers in the store.
+    /// </summary>
+    /// <returns>A list of all the containers currently in the store.</returns>
     IEnumerable<IBlobContainer> List();
+
+    /// <summary>
+    /// Gets the container with the specified name.
+    /// </summary>
+    /// <param name="name">Name of the container to retrieve.</param>
+    /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     IBlobContainer Get(string name);
+
+    /// <summary>
+    /// Creates a new container if it doesn't already exist.
+    /// </summary>
+    /// <param name="name">Name of the container to create.</param>
+    /// <returns>The newly created container, or the existing container if it already exists.</returns>
     IBlobContainer Create(string name);
+
+    /// <summary>
+    /// Deletes the container with the specified name.
+    /// </summary>
+    /// <param name="name">Name of the container to delete.</param>
     void Delete(string name);
   }
 }

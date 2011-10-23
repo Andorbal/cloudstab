@@ -26,8 +26,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SystemWrapper.IO;
 using cloudstab.core;
+using SystemWrapper.IO;
 
 namespace cloudstab.filesystem {
   public class FileSystemContainerManager : IBlobContainerManager {
@@ -47,11 +47,20 @@ namespace cloudstab.filesystem {
     private readonly IDirectoryWrap _directoryWrapper;
 
     #region "IBlobContainerManager Implementation"
+    /// <summary>
+    /// Lists all the containers in the store.
+    /// </summary>
+    /// <returns>A list of all the containers currently in the store.</returns>
     public IEnumerable<IBlobContainer> List() {
       return _directoryWrapper.GetDirectories(_rootPath)
         .Select(x => new FileSystemContainer(x));
     }
 
+    /// <summary>
+    /// Creates a new container if it doesn't already exist.
+    /// </summary>
+    /// <param name="name">Name of the container to create.</param>
+    /// <returns>The newly created container, or the existing container if it already exists.</returns>
     public IBlobContainer Create(string name) {
       EnsureNameIsValid(name);
 
@@ -59,10 +68,19 @@ namespace cloudstab.filesystem {
       return new FileSystemContainer(name);
     }
 
+    /// <summary>
+    /// Gets the container with the specified name.
+    /// </summary>
+    /// <param name="name">Name of the container to retrieve.</param>
+    /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public IBlobContainer Get(string name) {
       throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Deletes the container with the specified name.
+    /// </summary>
+    /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
       EnsureNameIsValid(name);
 
