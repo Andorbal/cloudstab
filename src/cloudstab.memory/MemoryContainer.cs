@@ -23,13 +23,37 @@
  THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
+using System.Collections.Generic;
+using cloudstab.core;
 
-namespace cloudstab.core.Exceptions {
-  public class BlobSecurityException : Exception {
-    public BlobSecurityException(Exception innerException) 
-      : base("Could not complete the request for security reasons", innerException) { }
+namespace cloudstab.memory {
+  public class MemoryContainer : IBlobContainer {
+    private string _name;
 
-    public BlobSecurityException(string message, Exception innerException)
-      : base(message, innerException) { }                                                                              
+    public MemoryContainer(string name) {
+      _name = name;
+    }
+
+    #region Implementation of IBlobContainer
+    public IEnumerable<IBlobObject> ListObjects() {
+      throw new NotImplementedException();
+    }
+
+    public void AddObject(object key, object blob) {
+      throw new NotImplementedException();
+    }
+
+    public void DeleteObject(object key) {
+      throw new NotImplementedException();
+    }
+
+    public IBlobObject GetObject(object key) {
+      throw new NotImplementedException();
+    }
+
+    public string Name {
+      get { return _name; }
+    }
+    #endregion
   }
 }

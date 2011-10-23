@@ -23,13 +23,31 @@
  THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
+using System.Runtime.Serialization;
 
 namespace cloudstab.core.Exceptions {
-  public class BlobSecurityException : Exception {
-    public BlobSecurityException(Exception innerException) 
-      : base("Could not complete the request for security reasons", innerException) { }
+  /// <summary>
+  /// Exception that is caused by using an invalid name for a container or a blob.
+  /// </summary>
+  public class InvalidNameException : Exception {
+    private string _name;
 
-    public BlobSecurityException(string message, Exception innerException)
-      : base(message, innerException) { }                                                                              
+    public InvalidNameException(string name) {
+      _name = name;
+    }
+
+    public InvalidNameException(string name, string message)
+      : base(message) {
+      _name = name;
+    }
+
+    public InvalidNameException(string name, string message, Exception innerException)
+      : base(message, innerException) {
+      _name = name;
+    }
+
+    public InvalidNameException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+    public string Name { get { return _name; } }
   }
 }

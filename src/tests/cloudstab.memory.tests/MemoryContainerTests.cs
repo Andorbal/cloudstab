@@ -23,13 +23,21 @@
  THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NUnit.Framework;
 
-namespace cloudstab.core.Exceptions {
-  public class BlobSecurityException : Exception {
-    public BlobSecurityException(Exception innerException) 
-      : base("Could not complete the request for security reasons", innerException) { }
+namespace cloudstab.memory.tests {
+  [TestFixture]
+  public class MemoryContainerTests {
+    [TestCase("foo"), TestCase("bar")]
+    public void Constructor_WithValidName_SetsName(string name) {
+      // Arrange & Act
+      var container = new MemoryContainer(name);
 
-    public BlobSecurityException(string message, Exception innerException)
-      : base(message, innerException) { }                                                                              
+      // Assert
+      Assert.That(container.Name, Is.EqualTo(name));
+    }
   }
 }
