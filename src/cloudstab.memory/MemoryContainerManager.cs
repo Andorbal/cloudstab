@@ -49,7 +49,7 @@ namespace cloudstab.memory {
     /// </summary>
     /// <returns>A list of all the containers currently in the store.</returns>
     public IEnumerable<IBlobContainer> List() {
-      throw new NotImplementedException();
+      return _store.Values;
     }
 
     /// <summary>

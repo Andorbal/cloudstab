@@ -116,5 +116,34 @@ namespace cloudstab.memory.tests {
       // Assert
       Assert.That(container, Is.Null);
     }
+
+    [Test]
+    public void List_WithNoContainers_ReturnsEmptyCollection() {
+      // Arrange
+      var testManager = new MemoryContainerManager();
+
+      // Act
+      var containers = testManager.List();
+
+      // Assert
+      Assert.That(containers, Is.Empty);
+    }
+
+    [Test]
+    public void List_WithContainers_ReturnsAllContainers() {
+      // Arrange
+      var fooContainer = MockRepository.GenerateStub<IBlobContainer>();
+      var barContainer = MockRepository.GenerateStub<IBlobContainer>();
+      var store = new Dictionary<string, IBlobContainer> {{"foo", fooContainer}, {"bar", barContainer}};
+      var testManager = new MemoryContainerManager(store);
+
+      // Act
+      var containers = testManager.List();
+
+      // Assert
+      Assert.That(containers.Count(), Is.EqualTo(2));
+      Assert.That(containers, Has.Member(fooContainer));
+      Assert.That(containers, Has.Member(barContainer));
+    }
   }
 }
