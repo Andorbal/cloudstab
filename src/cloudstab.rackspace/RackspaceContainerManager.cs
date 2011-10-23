@@ -96,7 +96,11 @@ namespace cloudstab.rackspace {
     /// </summary>
     /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
-      throw new System.NotImplementedException();
+      BlobContainerUtilities.EnsureValidContainerName(name);
+
+      if (Account.ContainerExists(name)) {
+        Account.DeleteContainer(name);
+      }
     }
     #endregion
   }

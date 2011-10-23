@@ -132,5 +132,46 @@ namespace cloudstab.rackspace.tests {
       // Assert
       Assert.That(result.Name, Is.EqualTo(name));
     }
+
+    [Test]
+    public void Delete_WithInvalidName_ThrowsInvalidNameException() {
+      // Arrange
+      var manager = new RackspaceContainerManager();
+
+      // Act & Assert
+      Assert.Throws<InvalidNameException>(() => manager.Delete(null));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Delete_WithExistingContainer_DeletesContainer(string name) {
+      // Arrange
+      var account = MockRepository.GenerateMock<IAccount>();
+      account.Stub(x => x.ContainerExists(name)).Return(true);
+      account.Expect(x => x.DeleteContainer(name));
+
+      var manager = new RackspaceContainerManager() { Account = account };
+
+      // Act
+      manager.Delete(name);
+
+      // Assert
+      account.AssertWasCalled(x => x.DeleteContainer(name));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Delete_WithNonExistingContainer_DoesNotDeleteContainer(string name) {
+      // Arrange
+      var account = MockRepository.GenerateMock<IAccount>();
+      account.Stub(x => x.ContainerExists(name)).Return(false);
+      account.Expect(x => x.DeleteContainer(name));
+
+      var manager = new RackspaceContainerManager() { Account = account };
+
+      // Act
+      manager.Delete(name);
+
+      // Assert
+      account.AssertWasNotCalled(x => x.DeleteContainer(name));
+    }
   }
 }
