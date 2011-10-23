@@ -25,11 +25,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using Rhino.Mocks;
 using cloudstab.core;
 using cloudstab.core.Exceptions;
+using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace cloudstab.memory.tests {
   [TestFixture]
@@ -117,6 +116,15 @@ namespace cloudstab.memory.tests {
       Assert.That(container, Is.Null);
     }
 
+    [TestCase(""), TestCase(null)]
+    public void Get_WithInvalidName_ThrowsInvalidNameException(string name) {
+      // Arrange
+      var testManager = new MemoryContainerManager();
+
+      // Act
+      Assert.Throws<InvalidNameException>(() => testManager.Get(name));
+    }
+
     [Test]
     public void List_WithNoContainers_ReturnsEmptyCollection() {
       // Arrange
@@ -134,7 +142,10 @@ namespace cloudstab.memory.tests {
       // Arrange
       var fooContainer = MockRepository.GenerateStub<IBlobContainer>();
       var barContainer = MockRepository.GenerateStub<IBlobContainer>();
-      var store = new Dictionary<string, IBlobContainer> { { "foo", fooContainer }, { "bar", barContainer } };
+      var store = new Dictionary<string, IBlobContainer> { 
+          { "foo", fooContainer }, 
+          { "bar", barContainer } 
+      };
       var testManager = new MemoryContainerManager(store);
 
       // Act
