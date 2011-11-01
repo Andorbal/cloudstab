@@ -9,6 +9,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>cloudstab.azure</RootNamespace>
     <AssemblyName>cloudstab.azure</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,7 +33,9 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.StorageClient">
+      <HintPath>..\packages\WindowsAzure.StorageClient.Library.1.4\lib\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -46,4 +50,8 @@
       <Name>cloudstab.core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
 </Project>
