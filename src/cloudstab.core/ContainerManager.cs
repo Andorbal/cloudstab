@@ -23,7 +23,6 @@
 	THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -52,7 +51,7 @@ namespace cloudstab.core {
     /// <returns>The container with the specified name, or null if it doesn't exist.</returns>
     public Container Get(string name) {
       EnsureValidContainerName(name);
-      throw new NotImplementedException();
+      return new Container(_provider.Get(name));
     }
 
     /// <summary>
@@ -71,7 +70,7 @@ namespace cloudstab.core {
     /// <param name="name">Name of the container to delete.</param>
     public void Delete(string name) {
       EnsureValidContainerName(name);
-      throw new NotImplementedException();
+      _provider.Delete(name);
     }
 
     private static void EnsureValidContainerName(string name) {

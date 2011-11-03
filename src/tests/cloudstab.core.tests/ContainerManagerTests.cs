@@ -110,6 +110,35 @@ namespace cloudstab.core.tests {
       Assert.Throws<InvalidNameException>(() => testManager.Get(name));
     }
 
+    [TestCase("foo"), TestCase("bar")]
+    public void Get_WithValidName_CallsGetOnProvider(string name) {
+      // Arrange
+      var provider = MockRepository.GenerateMock<IBlobContainerManager>();
+      provider.Expect(x => x.Get(name)).Return(MockRepository.GenerateStub<IBlobContainer>());
+      var testManager = new ContainerManager(provider);
+
+      // Act
+      testManager.Get(name);
+
+      // Assert
+      provider.AssertWasCalled(x => x.Get(name));
+    }
+
+    [Test]
+    public void Get_WithValidName_ReturnsWrappedProviderContainer() {
+      // Arrange
+      var providerContainer = MockRepository.GenerateStub<IBlobContainer>();
+      var provider = MockRepository.GenerateStub<IBlobContainerManager>();
+      provider.Stub(x => x.Get(null)).IgnoreArguments().Return(providerContainer);
+      var testManager = new ContainerManager(provider);
+
+      // Act
+      var result = testManager.Get("foo");
+
+      // Assert
+      Assert.That(result.Provider, Is.EqualTo(providerContainer));
+    }
+
     [TestCase(""), TestCase(null)]
     public void Delete_WithInvalidName_ThrowsInvalidNameException(string name) {
       // Arrange
@@ -117,6 +146,20 @@ namespace cloudstab.core.tests {
 
       // Act
       Assert.Throws<InvalidNameException>(() => testManager.Delete(name));
+    }
+
+    [TestCase("foo"), TestCase("bar")]
+    public void Delete_WithValidName_CallsDeleteOnProvider(string name) {
+      // Arrange
+      var provider = MockRepository.GenerateMock<IBlobContainerManager>();
+      provider.Expect(x => x.Delete(name));
+      var testManager = new ContainerManager(provider);
+
+      // Act
+      testManager.Delete(name);
+
+      // Assert
+      provider.AssertWasCalled(x => x.Delete(name));
     }
   }
 }
